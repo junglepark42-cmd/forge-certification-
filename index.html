@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Forge Certification</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Lora:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0E1A2B;--navy2:#233447;--ink:#1a2533;--steel:#556070;--mist:#8096a8;--fog:#b0bec8;
+  --stone:#e2e8ed;--cloud:#f5f7f9;--white:#ffffff;
+  --gold:#C9A84C;--gold2:#e0bb68;
+  --ok:#166534;--okbg:#f0fdf4;--okbr:#86efac;
+  --bad:#991b1b;--badbg:#fff5f5;--badbr:#fca5a5;
+  --na:#374151;--nabg:#f9fafb;--nabr:#d1d5db;
+  --r:12px;--rL:18px;
+  --shadow:0 1px 3px rgba(14,26,43,.08),0 4px 16px rgba(14,26,43,.06);
+}
+body{margin:0;padding:0;background:var(--cloud);color:var(--navy);font-family:'Lora',serif;line-height:1.6;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+h1,h2,h3,h4,h5,.mono{font-family:'Cinzel',serif;font-weight:700;margin:0}
+button,input,select,textarea{font-family:inherit;outline:none;border:none}
+*{box-sizing:border-box}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════ */
+.pg{display:none;min-height:100vh;max-width:800px;margin:0 auto;background:var(--cloud);position:relative}
+.pg.on{display:block}
+.pg-hdr{padding:44px 20px 24px;background:var(--white);border-bottom:1px solid var(--stone);display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.pg-hdr-back{display:flex;align-items:center;gap:6px;color:var(--gold);font-family:'Cinzel',serif;font-size:11px;cursor:pointer;letter-spacing:.05em}
+.pg-hdr-info{flex:1}
+.pg-hdr-title{font-size:18px;color:var(--navy)}
+.pg-hdr-sub{font-size:12px;color:var(--steel);margin-top:2px}
+.pg-body{padding:20px}
+
+/* ═══════════════════════════════════════
+   HOME (DASHBOARD)
+   ═══════════════════════════════════════ */
+.dash-home{background:var(--cloud)}
+.dash-hero{background:var(--navy);color:var(--white);padding:64px 24px 120px;position:relative;overflow:hidden;border-bottom-left-radius:32px;border-bottom-right-radius:32px}
+.dash-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg, rgba(14,26,43,0.95) 0%, rgba(35,52,71,0.8) 100%);z-index:1}
+.dash-photo{position:absolute;top:0;right:0;bottom:0;width:50%;background-size:cover;background-position:center;opacity:.4;z-index:0}
+.dash-hero-content{position:relative;z-index:2;max-width:500px}
+.dash-logo{display:flex;align-items:center;gap:12px;margin-bottom:56px}
+.dash-logo svg{width:42px;height:38px;color:var(--gold)}
+.dash-logo-name{font-family:'Cinzel',serif;font-size:26px;letter-spacing:.15em;font-weight:700}
+.dash-logo-sub{font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--mist);margin-top:-2px}
+.dash-user{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.dash-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy2);border:1px solid var(--gold);display:grid;place-items:center;font-family:'Cinzel',serif;color:var(--gold);font-size:14px}
+.dash-user strong{display:block;font-size:14px}.dash-user span{font-size:11px;color:var(--mist)}
+.dash-title{font-size:38px;line-height:1.1;margin-bottom:16px;font-weight:700}
+.dash-title em{font-style:normal;color:var(--gold)}
+.dash-lead{font-size:16px;color:var(--fog);max-width:380px;line-height:1.5}
+.dash-values{display:flex;gap:24px;margin-top:32px}
+.dash-value{display:flex;flex-direction:column;gap:6px;min-width:64px}
+.dash-value i{font-style:normal;font-size:24px;color:var(--gold)}
+.dash-value span{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--mist)}
+
+.dash-stats{display:grid;grid-template-columns:repeat(4, 1fr);background:var(--white);border-radius:20px;box-shadow:var(--shadow);position:absolute;bottom:-64px;left:24px;right:24px;z-index:3;overflow:hidden}
+.dash-stat{padding:20px 16px;display:flex;align-items:center;gap:12px;position:relative}
+.dash-stat::before{content:'';position:absolute;right:0;top:20%;bottom:20%;width:1px;background:var(--stone)}
+.dash-stat:last-child::before{display:none}
+.dash-stat-ico{font-size:20px;color:var(--gold);width:32px;height:32px;background:var(--cloud);border-radius:8px;display:grid;place-items:center}
+.dash-stat-val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--navy)}
+.dash-stat-lab{font-size:11px;color:var(--steel);margin-top:1px}
+.dash-stat-sub{font-size:9px;color:var(--mist);text-transform:uppercase}
+
+.dash-content{margin-top:84px;padding:0 24px 44px}
+.dash-actions{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+.dash-action{background:var(--white);border-radius:22px;padding:0;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:240px;cursor:pointer;transition:transform .2s}
+.dash-action:active{transform:scale(.98)}
+.dash-action-photo{height:100px;background-size:cover;background-position:center}
+.dash-action.control .dash-action-photo{background-image:url('https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&q=80&w=400')}
+.dash-action.client .dash-action-photo{background-image:url('https://images.unsplash.com/photo-1454165833767-027ff33027ef?auto=format&fit=crop&q=80&w=400')}
+.dash-action-body{padding:24px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.dash-action-k{font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:700;margin-bottom:6px}
+.dash-action-title{font-size:24px;line-height:1.1;margin-bottom:8px}
+.dash-action-txt{font-size:12px;color:var(--steel);line-height:1.4}
+.dash-go{display:flex;align-items:center;gap:8px;margin-top:16px;color:var(--navy);font-family:'Cinzel',serif;font-size:11px;font-weight:700}
+.dash-go b{width:22px;height:22px;border-radius:50%;background:var(--gold);color:var(--white);display:grid;place-items:center;font-size:14px}
+
+.dash-panels{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.dash-panel{background:var(--white);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.dash-panel.light{background:transparent;box-shadow:none;border:1px solid var(--stone);padding:18px}
+.dash-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.dash-panel-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.05em;color:var(--navy)}
+.dash-panel-link{font-size:11px;color:var(--gold);cursor:pointer}
+
+.dash-mini-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.dash-mini-row:last-child{border-bottom:0}
+.dash-mini-main{font-weight:700;font-size:14px}.dash-mini-sub{font-size:12px;color:var(--steel);margin-top:3px}
+.dash-status{font-size:11px;border-radius:999px;padding:4px 9px;background:var(--okbg);color:var(--ok)}
+.dash-date{width:46px;height:46px;border-radius:10px;border:1px solid var(--stone);display:grid;place-items:center;color:var(--gold);font-family:'Cinzel',serif;font-size:12px;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   COMPONENTS
+   ═══════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:var(--r);font-family:'Cinzel',serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;width:100%;letter-spacing:.05em}
+.btn-p{background:var(--navy);color:var(--white)}
+.btn-p:active{background:var(--ink)}
+.btn-g{background:var(--white);color:var(--navy);border:1.5px solid var(--stone)}
+.btn-gold{background:var(--gold);color:var(--white)}
+.btn-sm{padding:10px 16px;font-size:11px;border-radius:8px}
+.btn-row{display:flex;gap:10px}
+
+.fld{margin-bottom:18px}
+.fld label,.lbl{display:block;font-size:12px;color:var(--steel);margin-bottom:6px;font-weight:600}
+.fld input,.fld select,.fld textarea,.sbox input{width:100%;padding:14px;background:var(--white);border:1.5px solid var(--stone);border-radius:12px;font-size:15px;color:var(--navy);transition:border-color .2s}
+.fld input:focus{border-color:var(--gold)}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.sbox{position:relative;margin-bottom:20px}
+.sbox input{padding-left:44px;background:var(--white)}
+.sico{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--mist)}
+
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.p-gold{background:rgba(201,168,76,.15);color:var(--gold)}
+.p-ok{background:var(--okbg);color:var(--ok)}
+.p-bad{background:var(--badbg);color:var(--bad)}
+
+.cli-card{background:var(--white);border-radius:18px;padding:18px;border:1.5px solid var(--stone);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.cli-name{font-family:'Cinzel',serif;font-size:15px;color:var(--navy);font-weight:700}
+.cli-meta{font-size:12px;color:var(--steel);margin-top:3px}
+
+/* ═══════════════════════════════════════
+   CONTROL INTERFACE
+   ═══════════════════════════════════════ */
+.ctrl-hdr{padding:44px 20px 20px;background:var(--navy);color:var(--white);display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.ctrl-hdr-back{display:flex;align-items:center;gap:6px;color:var(--gold);font-family:'Cinzel',serif;font-size:11px;cursor:pointer}
+.ctrl-hdr-info{flex:1}
+.ctrl-hdr-title{font-size:17px;font-family:'Cinzel',serif}
+.ctrl-hdr-sub{font-size:11px;color:var(--mist);margin-top:2px}
+.ctrl-hdr-menu{width:40px;height:40px;display:grid;place-items:center;cursor:pointer;color:var(--gold)}
+
+.prog-wrap{background:var(--navy);padding:0 20px 16px}
+.prog-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);transition:width .4s}
+.prog-lbl{font-size:10px;color:var(--mist);margin-top:6px;text-align:right;text-transform:uppercase;letter-spacing:.05em}
+
+.phase-hdr{padding:24px 20px;background:var(--white);border-bottom:1px solid var(--stone)}
+.phase-num{font-family:'Cinzel',serif;font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.phase-title{font-size:22px;color:var(--navy);line-height:1.2}
+.phase-desc{font-size:13px;color:var(--steel);margin-top:6px}
+
+.ci{background:var(--white);border-radius:20px;padding:20px;margin-bottom:16px;border:1.5px solid var(--stone);transition:all .2s}
+.ci.s-ok{border-color:var(--okbr);background:var(--okbg)}
+.ci.s-bad{border-color:var(--badbr);background:var(--badbg)}
+.ci.s-na{border-color:var(--nabr);background:var(--nabg)}
+.ci-nm{font-size:15px;font-weight:600;color:var(--navy);line-height:1.4}
+.ci-ref{font-size:11px;color:var(--mist);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.ci-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px}
+.cb{padding:10px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;background:var(--cloud);color:var(--steel);border:1px solid var(--stone)}
+.cb.on.ok{background:var(--ok);color:var(--white);border-color:var(--ok)}
+.cb.on.bad{background:var(--bad);color:var(--white);border-color:var(--bad)}
+.cb.on.na{background:var(--na);color:var(--white);border-color:var(--na)}
+
+.ci-det{margin-top:16px;display:none}
+.ci.s-ok .ci-det, .ci.s-bad .ci-det, .ci.s-na .ci-det{display:block}
+.measure-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.measure-row input{width:80px;padding:8px;border-radius:8px;border:1px solid var(--stone);font-size:14px;text-align:center}
+.mlim{font-size:11px;color:var(--bad);font-weight:700;margin-left:auto}
+.mlim.ok{color:var(--ok)}
+.nc-note{width:100%;padding:12px;border-radius:12px;border:1px solid var(--stone);font-size:13px;margin-bottom:12px;resize:none}
+.photo-btn{padding:12px;border:1.5px dashed var(--stone);border-radius:12px;text-align:center;font-size:12px;color:var(--steel);cursor:pointer;margin-bottom:8px}
+.photo-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.pthumb{width:60px;height:60px;border-radius:8px;overflow:hidden;position:relative;flex-shrink:0}
+.pthumb img{width:100%;height:100%;object-fit:cover}
+.pdel{position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(0,0,0,.5);color:white;border-radius:50%;display:grid;place-items:center;font-size:12px}
+
+/* ═══════════════════════════════════════
+   SIDEBAR & MODALS
+   ═══════════════════════════════════════ */
+.sb-ov{position:fixed;inset:0;background:rgba(14,26,43,.6);z-index:200;display:none}
+.sb-ov.on{display:block}
+.sb{position:fixed;top:0;right:-300px;bottom:0;width:300px;background:var(--white);z-index:201;transition:right .3s ease;display:flex;flex-direction:column}
+.sb.on{right:0}
+.sb-top{padding:44px 20px 24px;background:var(--navy);color:var(--white)}
+.sb-close{position:absolute;top:40px;right:16px;font-size:24px;cursor:pointer;color:var(--mist)}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.sb-logo-txt strong{display:block;font-size:16px;letter-spacing:.1em}.sb-logo-txt small{font-size:9px;color:var(--mist);text-transform:uppercase}
+.sb-rpt{font-size:10px;color:var(--gold);font-family:'JetBrains Mono',monospace;display:block;margin-bottom:4px}
+.sb-title{font-family:'Cinzel',serif;font-size:18px;line-height:1.2}
+.sb-phases{flex:1;overflow-y:auto;padding:12px 0}
+.sb-phase{padding:14px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;border-bottom:1px solid var(--cloud)}
+.sb-phase.active{background:var(--cloud);border-left:4px solid var(--gold)}
+.sb-pnum{font-size:10px;color:var(--mist);font-family:'JetBrains Mono',monospace;width:24px}
+.sb-pname{font-size:13px;color:var(--navy);flex:1}
+.sb-pstatus{font-size:14px}
+.sb-footer{padding:20px;border-top:1px solid var(--stone)}
+
+.modal-ov{position:fixed;inset:0;background:rgba(14,26,43,.6);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.on{display:flex}
+.modal{background:var(--white);border-radius:24px;padding:32px 24px;width:100%;max-width:400px;position:relative}
+.modal h3{font-size:22px;margin-bottom:12px;text-align:center}
+.modal p{font-size:14px;color:var(--steel);text-align:center;margin-bottom:24px}
+
+/* ═══════════════════════════════════════
+   CALCULATORS
+   ═══════════════════════════════════════ */
+.calc-block{background:var(--white);border-radius:20px;padding:20px;margin-bottom:20px;border:1.5px solid var(--stone)}
+.calc-block h4{font-size:13px;margin-bottom:16px;color:var(--gold);letter-spacing:.05em}
+.infobox{background:var(--cloud);padding:12px;border-radius:12px;font-size:12px;color:var(--steel);margin-bottom:16px;line-height:1.4}
+.shape-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.shape-row input{width:60px;padding:8px;border-radius:8px;border:1px solid var(--stone);font-size:13px;text-align:center}
+.shape-area{font-size:12px;font-weight:700;color:var(--navy);min-width:60px;text-align:right}
+.shape-del{color:var(--bad);font-size:18px;cursor:pointer;background:none;padding:4px}
+.cres{background:var(--cloud);padding:12px;border-radius:12px;text-align:center;border:1px solid var(--stone)}
+.cres-v{display:block;font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--navy)}
+.cres-l{font-size:9px;color:var(--steel);text-transform:uppercase}
+.cres.hi{border-color:var(--gold);background:rgba(201,168,76,.05)}
+
+/* ═══════════════════════════════════════
+   REPORT
+   ═══════════════════════════════════════ */
+.rpt-top{padding:44px 24px 32px;background:var(--navy);color:var(--white);text-align:center}
+.rpt-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px}
+.rpt-logo strong{font-family:'Cinzel',serif;font-size:18px;letter-spacing:.1em}.rpt-logo small{font-size:9px;text-transform:uppercase;color:var(--mist);display:block;margin-top:-2px}
+.rpt-title{font-size:32px;margin-bottom:8px}
+.rpt-meta{font-size:12px;color:var(--mist);margin-bottom:32px}
+.rpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rpt-box{padding:16px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.rpt-val{display:block;font-family:'Cinzel',serif;font-size:24px;font-weight:700;margin-bottom:2px}
+.rpt-lbl{font-size:10px;color:var(--mist);text-transform:uppercase;letter-spacing:.05em}
+.rpt-ok .rpt-val{color:#86efac}.rpt-bad .rpt-val{color:#fca5a5}
+.nc-item{padding:16px;background:var(--white);border-radius:16px;border:1.5px solid var(--badbr);margin-bottom:12px}
+.nc-item strong{display:block;font-size:14px;margin-bottom:4px;color:var(--bad)}
+.nc-item span{font-size:13px;color:var(--steel)}
+
+@media(max-width:720px){
+  .dash-hero{padding-bottom:100px}
+  .dash-stats{grid-template-columns:1fr 1fr;bottom:-80px}
+  .dash-content{margin-top:100px}
+  .dash-actions{grid-template-columns:1fr}
+  .dash-panels{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="forge-mark" viewBox="0 0 80 72">
+    <path d="M6 4 L6 68 L10 68 L10 40 L44 40 L44 36 L10 36 L10 8 L74 8 L74 24 L78 24 L78 4 Z" fill="currentColor"/>
+    <rect x="20" y="18" width="48" height="2.5" fill="currentColor" rx="1"/>
+    <rect x="24" y="23" width="40" height="2" fill="currentColor" rx="1"/>
+    <rect x="22" y="27" width="5" height="33" fill="currentColor" rx="1"/>
+    <rect x="34" y="27" width="5" height="33" fill="currentColor" rx="1"/>
+    <rect x="46" y="27" width="5" height="33" fill="currentColor" rx="1"/>
+    <rect x="58" y="27" width="5" height="33" fill="currentColor" rx="1"/>
+    <rect x="18" y="60" width="52" height="3" fill="currentColor" rx="1"/>
+    <rect x="14" y="64" width="60" height="4" fill="currentColor" rx="1"/>
+  </symbol>
+  <symbol id="ico-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+  <symbol id="ico-menu" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="ico-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<!-- ═══ HOME ═══ -->
+<div class="pg on" id="pg-home">
+  <div class="dash-home">
+    <section class="dash-hero">
+      <div class="dash-photo" style="background-image:url('https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&q=80&w=800')"></div>
+      <div class="dash-hero-content">
+        <div class="dash-logo">
+          <svg><use href="#forge-mark"/></svg>
+          <div>
+            <div class="dash-logo-name">FORGE</div>
+            <div class="dash-logo-sub">Certification</div>
+          </div>
+        </div>
+        <div class="dash-user">
+          <div class="dash-avatar">HF</div>
+          <div><strong>Hervé F.</strong><span>Contrôleur</span></div>
+        </div>
+        <h1 class="dash-title">La conformité<br>ne laisse <em>rien au hasard.</em></h1>
+        <p class="dash-lead">Inspectez, documentez et certifiez chaque structure en toute simplicité.</p>
+        <div class="dash-values">
+          <div class="dash-value"><i>♢</i><span>Sécurité</span></div>
+          <div class="dash-value"><i>▥</i><span>Conformité</span></div>
+          <div class="dash-value"><i>✓</i><span>Engagement</span></div>
+        </div>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <div class="dash-stat-ico">▤</div>
+          <div><div class="dash-stat-val" id="st-ctrl">0</div><div class="dash-stat-lab">Contrôles</div></div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-ico">▣</div>
+          <div><div class="dash-stat-val" id="st-cli">3</div><div class="dash-stat-lab">Clients</div></div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-ico">♢</div>
+          <div><div class="dash-stat-val" id="st-conf">—</div><div class="dash-stat-lab">Conformité</div></div>
+        </div>
+        <div class="dash-stat">
+          <div class="dash-stat-ico">◷</div>
+          <div><div class="dash-stat-val">6</div><div class="dash-stat-lab">À venir</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="dash-content">
+      <div class="dash-actions">
+        <div class="dash-action control" onclick="quickNewControl()">
+          <div class="dash-action-photo"></div>
+          <div class="dash-action-body">
+            <div>
+              <div class="dash-action-k">Action principale</div>
+              <div class="dash-action-title">Nouveau<br>contrôle</div>
+              <div class="dash-action-txt">Démarrer un contrôle sur une structure connue ou créer un dossier terrain.</div>
+            </div>
+            <div class="dash-go"><b>›</b><span>Commencer</span></div>
+          </div>
+        </div>
+        <div class="dash-action client" onclick="go('pg-newcli')">
+          <div class="dash-action-photo"></div>
+          <div class="dash-action-body">
+            <div>
+              <div class="dash-action-k">Gestion clients</div>
+              <div class="dash-action-title">Nouveau<br>client</div>
+              <div class="dash-action-txt">Ajouter un client, ses informations et ses structures.</div>
+            </div>
+            <div class="dash-go"><b>›</b><span>Ajouter</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-panels">
+        <div class="dash-panel">
+          <div class="dash-panel-head"><div class="dash-panel-title">Clients récents</div><div class="dash-panel-link">Voir tout ›</div></div>
+          <div id="cliList"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-head"><div class="dash-panel-title">Derniers rapports</div><div class="dash-panel-link">Voir tout ›</div></div>
+          <div id="recentList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEW CONTROL CONFIG ═══ -->
+<div class="pg" id="pg-newctrl">
+  <div class="pg-hdr">
+    <div class="pg-hdr-back" onclick="go('pg-home')"><svg width="15" height="15"><use href="#ico-back"/></svg><span>Accueil</span></div>
+    <div class="pg-hdr-info">
+      <div class="pg-hdr-title">Nouveau contrôle</div>
+      <div class="pg-hdr-sub">Choisir le client et la structure</div>
+    </div>
+  </div>
+  <div class="pg-body">
+    <div class="calc-block">
+      <h4>Démarrage rapide</h4>
+      <div class="infobox">Testez l'application avec une structure de démonstration.</div>
+      <button class="btn btn-p" onclick="startDemoControl()">Commencer avec la structure démo</button>
+    </div>
+    <div class="calc-block">
+      <h4>Structures disponibles</h4>
+      <div id="newctrl-list"></div>
+    </div>
+    <div class="calc-block">
+      <h4>Actions</h4>
+      <div class="btn-row">
+        <button class="btn btn-g" onclick="go('pg-newcli')">+ Nouveau client</button>
+        <button class="btn btn-gold" onclick="go('pg-newstr')">+ Nouvelle structure</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEW CLIENT ═══ -->
+<div class="pg" id="pg-newcli">
+  <div class="pg-hdr">
+    <div class="pg-hdr-back" onclick="go('pg-home')"><svg width="15" height="15"><use href="#ico-back"/></svg><span>Retour</span></div>
+    <div class="pg-hdr-info"><div class="pg-hdr-title">Nouveau client</div></div>
+  </div>
+  <div class="pg-body">
+    <div class="fld"><label>Nom client</label><input id="nc-name" placeholder="Camping Les Peupliers"></div>
+    <div class="fld"><label>Contact</label><input id="nc-contact" placeholder="Nom du responsable"></div>
+    <div class="fg2">
+      <div class="fld"><label>Ville</label><input id="nc-city" placeholder="Ville"></div>
+      <div class="fld"><label>Type</label><select id="nc-type"><option>Exploitant</option><option>Loueur</option><option>Camping</option><option>Mairie</option></select></div>
+    </div>
+    <div class="fld"><label>Email</label><input id="nc-email" type="email"></div>
+    <div class="mt16"><button class="btn btn-p" onclick="saveCli()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- ═══ CLIENT ═══ -->
+<div class="pg" id="pg-client">
+  <div class="pg-hdr">
+    <div class="pg-hdr-back" onclick="go('pg-home')"><svg width="15" height="15"><use href="#ico-back"/></svg><span>Accueil</span></div>
+    <div class="pg-hdr-info">
+      <div class="pg-hdr-title" id="cli-title">Client</div>
+      <div class="pg-hdr-sub" id="cli-sub"></div>
+    </div>
+    <div class="pg-hdr-action"><button class="btn btn-gold btn-sm" onclick="go('pg-newstr')">+ Structure</button></div>
+  </div>
+  <div class="pg-body">
+    <div class="lbl">Structures</div>
+    <div id="strList"></div>
+    <div class="lbl" style="margin-top:24px">Contrôles passés</div>
+    <div id="cliControls"></div>
+  </div>
+</div>
+
+<!-- ═══ NEW STRUCTURE ═══ -->
+<div class="pg" id="pg-newstr">
+  <div class="pg-hdr">
+    <div class="pg-hdr-back" onclick="go('pg-client')"><svg width="15" height="15"><use href="#ico-back"/></svg><span>Client</span></div>
+    <div class="pg-hdr-info"><div class="pg-hdr-title">Nouvelle structure</div></div>
+  </div>
+  <div class="pg-body">
+    <div class="fld"><label>Nom</label><input id="ns-name" placeholder="Château Dragon"></div>
+    <div class="fld"><label>Fabricant</label><input id="ns-maker"></div>
+    <div class="fg2">
+      <div class="fld"><label>Longueur (m)</label><input id="ns-L" type="number" step=".1" value="8"></div>
+      <div class="fld"><label>Largeur (m)</label><input id="ns-W" type="number" step=".1" value="5"></div>
+    </div>
+    <div class="fld"><label>Type</label>
+      <select id="ns-type">
+        <option value="chateau">Château</option>
+        <option value="combo">Combo</option>
+        <option value="toboggan">Toboggan</option>
+      </select>
+    </div>
+    <div class="mt16"><button class="btn btn-p" onclick="saveStr()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- ═══ CONTROL ═══ -->
+<div class="pg" id="pg-ctrl">
+  <div class="ctrl-hdr">
+    <div class="ctrl-hdr-back" onclick="go('pg-home')"><svg width="14" height="14"><use href="#ico-back"/></svg><span>Quitter</span></div>
+    <div class="ctrl-hdr-info">
+      <div class="ctrl-hdr-title" id="ctrl-title">Contrôle</div>
+      <div class="ctrl-hdr-sub" id="ctrl-sub"></div>
+    </div>
+    <div class="ctrl-hdr-menu" onclick="openSidebar()"><svg width="20" height="20"><use href="#ico-menu"/></svg></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-lbl" id="progLbl">0 points</div>
+  </div>
+  <div class="phase-hdr">
+    <span class="phase-num" id="phNum">P0</span>
+    <div class="phase-title" id="phTitle">Phase</div>
+    <div class="phase-desc" id="phDesc">Description</div>
+  </div>
+  <div class="pg-body" id="phBody"></div>
+</div>
+
+<!-- ═══ REPORT ═══ -->
+<div class="pg" id="pg-report">
+  <div class="rpt-top">
+    <div class="rpt-logo">
+      <svg width="30" height="27" style="color:var(--gold)"><use href="#forge-mark"/></svg>
+      <div><strong>FORGE</strong>Certification</div>
+    </div>
+    <div class="rpt-title" id="r-title">Rapport</div>
+    <div class="rpt-meta" id="r-meta"></div>
+    <div class="rpt-grid">
+      <div class="rpt-box rpt-ok"><span class="rpt-val" id="r-ok">0</span><span class="rpt-lbl">Conformes</span></div>
+      <div class="rpt-box rpt-bad"><span class="rpt-val" id="r-bad">0</span><span class="rpt-lbl">Non-conformités</span></div>
+    </div>
+  </div>
+  <div class="pg-body" id="rptBody">
+    <button class="btn btn-p mt16" onclick="go('pg-home')">Retour accueil</button>
+  </div>
+</div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sb-ov" id="sbOv" onclick="closeSidebar()"></div>
+<div class="sb" id="sb">
+  <div class="sb-top">
+    <span class="sb-close" onclick="closeSidebar()">×</span>
+    <div class="sb-logo">
+      <svg width="26" height="23" style="color:var(--gold)"><use href="#forge-mark"/></svg>
+      <div class="sb-logo-txt"><strong>FORGE</strong>Certification</div>
+    </div>
+    <div class="sb-title" id="sb-title">Navigation</div>
+  </div>
+  <div class="sb-phases" id="sb-phases"></div>
+</div>
+
+<!-- ═══ LOCK MODAL ═══ -->
+<div class="modal-ov" id="lockModal">
+  <div class="modal">
+    <h3>Finaliser le rapport</h3>
+    <p>Le rapport sera verrouillé et ne pourra plus être modifié.</p>
+    <div id="lockSum"></div>
+    <button class="btn btn-p mt16" onclick="doLock()">Confirmer & Verrouiller</button>
+    <button class="btn btn-g mt8" onclick="closeLock()">Annuler</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA & CONSTANTS
+   ═══════════════════════════════════════ */
+let clients = [
+  {id:1, name:'Jungle Park', contact:'Hervé Fougerouse', city:'Roanne', structures:[]},
+  {id:2, name:'Camping Les Peupliers', contact:'Mme Martin', city:'Vichy', structures:[]},
+  {id:3, name:'Mairie de Saint-Léger', contact:'Service animation', city:'Saint-Léger', structures:[]},
+];
+let controls = [];
+let rptCnt = 1;
+let curCliId = null;
+let curStrIdx = null;
+let curPhase = 0;
+let phases = [];
+let CS = {}; // Check State
+
+const TYPES = [
+  {id:'chateau', ico:'🎠', nm:'Château gonflable'},
+  {id:'combo', ico:'🏛️', nm:'Combo'},
+  {id:'toboggan', ico:'〽️', nm:'Toboggan'},
+];
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════ */
+function go(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+/* ═══════════════════════════════════════
+   CORE FUNCTIONS
+   ═══════════════════════════════════════ */
+function renderCli() {
+  const list = document.getElementById('cliList');
+  list.innerHTML = clients.slice(0,4).map(c => `
+    <div class="dash-mini-row" onclick="openCli(${c.id})" style="cursor:pointer">
+      <div>
+        <div class="dash-mini-main">${c.name}</div>
+        <div class="dash-mini-sub">${c.city} · ${c.structures.length} structure(s)</div>
+      </div>
+      <span class="dash-status">Actif</span>
+    </div>`).join('');
+}
+
+function openCli(id) {
+  curCliId = id;
+  const c = clients.find(x => x.id === id);
+  document.getElementById('cli-title').textContent = c.name;
+  document.getElementById('cli-sub').textContent = c.city;
+  renderStr(c);
+  go('pg-client');
+}
+
+function renderStr(c) {
+  const b = document.getElementById('strList');
+  if (!c.structures.length) { b.innerHTML = '<div class="empty">Aucune structure.</div>'; return; }
+  b.innerHTML = c.structures.map((s, i) => `
+    <div class="cli-card">
+      <div>
+        <span class="cli-name">${s.name}</span>
+        <div class="cli-meta">${s.maker} · ${s.L}x${s.W}m</div>
+      </div>
+      <button class="btn btn-p btn-sm" style="width:auto" onclick="startCtrl(${c.id},${i})">Contrôler</button>
+    </div>`).join('');
+}
+
+function saveCli() {
+  const name = document.getElementById('nc-name').value;
+  if(!name) return alert('Nom requis');
+  clients.push({id: Date.now(), name, city: document.getElementById('nc-city').value, structures:[]});
+  renderCli();
+  go('pg-home');
+}
+
+function saveStr() {
+  const c = clients.find(x => x.id === curCliId);
+  c.structures.push({
+    name: document.getElementById('ns-name').value || 'Structure',
+    maker: document.getElementById('ns-maker').value || '—',
+    L: document.getElementById('ns-L').value,
+    W: document.getElementById('ns-W').value,
+    type: document.getElementById('ns-type').value
+  });
+  openCli(curCliId);
+}
+
+function ensureDemoStructure() {
+  if (clients[0].structures.length === 0) {
+    clients[0].structures.push({name:'Château Dragon', maker:'Fabricant Demo', L:8, W:5, type:'combo'});
+  }
+}
+
+function quickNewControl() {
+  ensureDemoStructure();
+  renderNewControlList();
+  go('pg-newctrl');
+}
+
+function renderNewControlList() {
+  const box = document.getElementById('newctrl-list');
+  let rows = [];
+  clients.forEach(c => {
+    c.structures.forEach((s, idx) => {
+      rows.push(`<div class="cli-card" onclick="startCtrl(${c.id},${idx})">
+        <div><span class="cli-name">${s.name}</span><div class="cli-meta">${c.name}</div></div>
+        <span class="pill p-gold">Contrôler ›</span>
+      </div>`);
+    });
+  });
+  box.innerHTML = rows.join('') || 'Aucune structure.';
+}
+
+function startDemoControl() {
+  ensureDemoStructure();
+  startCtrl(1, 0);
+}
+
+/* ═══════════════════════════════════════
+   CONTROL ENGINE
+   ═══════════════════════════════════════ */
+function buildPhases(s) {
+  return [
+    {id:'p0', num:'P0', title:'Infos générales', desc:'Identification', type:'check', items:[
+      {id:'i1', nm:'Marquage lisible', ref:'§8'},
+      {id:'i2', nm:'Soufflerie conforme', ref:'§8'}
+    ]},
+    {id:'p1', num:'P1', title:'Extérieur', desc:'Tissu et coutures', type:'check', items:[
+      {id:'i3', nm:'Tissu sans trou', ref:'§4.1'},
+      {id:'i4', nm:'Ancrages suffisants', ref:'§4.2'}
+    ]}
+  ];
+}
+
+/**
+ * DÉMARRAGE DU CONTRÔLE
+ */
+function startCtrl(cliId, strIdx) {
+  curCliId = cliId;
+  curStrIdx = strIdx;
+  const c = clients.find(x => x.id === cliId);
+  const s = c.structures[strIdx];
+  
+  CS = {};
+  curPhase = 0;
+  phases = buildPhases(s);
+
+  document.getElementById('ctrl-title').textContent = s.name;
+  document.getElementById('ctrl-sub').textContent = c.name;
+  
+  renderSidebar();
+  showPhase(0);
+  go('pg-ctrl');
+}
+
+function showPhase(idx) {
+  curPhase = idx;
+  const p = phases[idx];
+  document.getElementById('phNum').textContent = p.num;
+  document.getElementById('phTitle').textContent = p.title;
+  document.getElementById('phDesc').textContent = p.desc;
+  
+  const body = document.getElementById('phBody');
+  body.innerHTML = p.items.map(item => `
+    <div class="ci ${CS[item.id]?.status ? 's-'+CS[item.id].status : ''}" id="ci-${item.id}">
+      <div class="ci-nm">${item.nm}</div>
+      <div class="ci-ref">${item.ref}</div>
+      <div class="ci-btns">
+        <button class="cb ok ${CS[item.id]?.status==='ok'?'on':''}" onclick="setC('${item.id}','ok')">OK</button>
+        <button class="cb bad ${CS[item.id]?.status==='bad'?'on':''}" onclick="setC('${item.id}','bad')">NC</button>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="btn-row mt16">
+      ${idx > 0 ? `<button class="btn btn-g" onclick="showPhase(${idx-1})">Précédent</button>` : ''}
+      ${idx < phases.length-1 ? `<button class="btn btn-p" onclick="showPhase(${idx+1})">Suivant</button>` : `<button class="btn btn-p" onclick="openLock()">Finaliser</button>`}
+    </div>
+  `;
+  updateProgress();
+}
+
+function setC(id, st) {
+  CS[id] = {status: st};
+  showPhase(curPhase);
+}
+
+function updateProgress() {
+  const items = phases.flatMap(p => p.items);
+  const done = items.filter(i => CS[i.id]).length;
+  const pct = Math.round(done/items.length*100) || 0;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLbl').textContent = done + ' / ' + items.length + ' points';
+}
+
+function openSidebar() { document.getElementById('sbOv').classList.add('on'); document.getElementById('sb').classList.add('on'); }
+function closeSidebar() { document.getElementById('sbOv').classList.remove('on'); document.getElementById('sb').classList.remove('on'); }
+
+function renderSidebar() {
+  document.getElementById('sb-phases').innerHTML = phases.map((p, i) => `
+    <div class="sb-phase ${i===curPhase?'active':''}" onclick="closeSidebar();showPhase(${i})">
+      <span class="sb-pnum">${p.num}</span>
+      <span class="sb-pname">${p.title}</span>
+    </div>`).join('');
+}
+
+function openLock() { document.getElementById('lockModal').classList.add('on'); }
+function closeLock() { document.getElementById('lockModal').classList.remove('on'); }
+function doLock() {
+  const c = clients.find(x => x.id === curCliId);
+  const s = c.structures[curStrIdx];
+  document.getElementById('r-title').textContent = s.name;
+  document.getElementById('r-meta').textContent = c.name + ' · ' + new Date().toLocaleDateString();
+  closeLock();
+  go('pg-report');
+}
+
+// Init
+renderCli();
+</script>
+</body>
+</html>
